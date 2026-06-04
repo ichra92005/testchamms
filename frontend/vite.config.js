@@ -6,9 +6,8 @@ export default defineConfig({
   server: {
     port: 5173,
   },
-  base: '/build/',
   build: {
-    outDir: '../backend/public/build',
+    outDir: 'dist',
     assetsDir: 'assets',
     emptyOutDir: true,
   },
