@@ -1,0 +1,229 @@
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE CSS — DeliverIt
+   Breakpoints:
+     768px  → tablet / small desktop
+     480px  → mobile
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── NAVBAR ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 16px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .logo { font-size: 1.1rem; }
+  .nav-actions { gap: 8px; }
+  .btn-outline,
+  .btn-solid {
+    padding: 8px 12px;
+    font-size: .8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .btn-outline,
+  .btn-solid {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/* ── HERO ────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero { padding: 40px 20px 36px; }
+  .hero h1 { font-size: 2rem; margin-bottom: 14px; }
+  .hero p  { font-size: .92rem; margin-bottom: 36px; }
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    max-width: 100%;
+  }
+  .stat-card { padding: 20px 16px; }
+  .stat-number { font-size: 1.8rem; }
+}
+
+/* ── TRACK SECTION ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .track-section { padding: 40px 20px; }
+  .track-section h2 { font-size: 1.5rem; }
+  .track-form {
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: visible;
+    box-shadow: none;
+    gap: 10px;
+  }
+  .track-input {
+    border-radius: 12px !important;
+    border-right: 2px solid var(--gray-border) !important;
+    padding: 14px 16px;
+    width: 100%;
+  }
+  .track-btn {
+    border-radius: 12px !important;
+    justify-content: center;
+    padding: 14px;
+    width: 100%;
+  }
+}
+
+/* ── TRACKING RESULT PAGE ────────────────────────────────────── */
+@media (max-width: 768px) {
+  .result-page { padding: 20px 16px 40px; }
+  .result-page h2 { font-size: 1.4rem; }
+
+  .stepper-card { padding: 20px 16px; overflow-x: auto; }
+  .stepper { min-width: 500px; }
+
+  .info-grid { grid-template-columns: 1fr; gap: 14px; }
+  .info-card { padding: 20px 16px; }
+
+  .route-card { padding: 20px 16px; }
+}
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .footer { padding: 36px 20px 24px; }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* ── AUTH PAGE ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .auth-left  { display: none; }
+  .auth-right { padding: 20px 16px; min-height: 100vh; }
+  .auth-card  { padding: 24px 20px 28px; }
+  .admin-form-grid { grid-template-columns: 1fr; }
+  .role-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+}
+
+/* ── AGENT / DRIVER / ADMIN DASHBOARDS ───────────────────────── */
+@media (max-width: 900px) {
+  .agent-sidebar { display: none; }
+  .agent-main    { padding: 20px 16px; }
+}
+
+@media (max-width: 768px) {
+  /* Stats row */
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+  .stat-box { padding: 16px; }
+  .stat-box-number { font-size: 1.6rem; }
+
+  /* Topbar */
+  .agent-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .topbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Form grid */
+  .form-grid { grid-template-columns: 1fr; gap: 0; }
+  .form-card { padding: 20px 16px; }
+
+  /* Parcel table — horizontal scroll */
+  .parcels-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .parcels-table { min-width: 700px; }
+  .parcels-section { border-radius: 12px; }
+
+  /* Parcels header */
+  .parcels-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  /* Filter tabs */
+  .filter-tabs { gap: 6px; flex-wrap: wrap; }
+  .filter-tab  { padding: 6px 12px; font-size: .8rem; }
+
+  /* Driver cards */
+  .driver-cards-grid { grid-template-columns: 1fr; }
+  .driver-info-grid  { grid-template-columns: 1fr 1fr; }
+  .driver-card-actions { flex-wrap: wrap; }
+  .driver-btn { min-width: 140px; }
+}
+
+@media (max-width: 480px) {
+  .stats-row { grid-template-columns: 1fr 1fr !important; }
+  .driver-info-grid { grid-template-columns: 1fr; }
+  .form-actions { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+}
+
+/* ── ADMIN OVERVIEW GRID ─────────────────────────────────────── */
+@media (max-width: 900px) {
+  .admin-overview-grid { grid-template-columns: 1fr; }
+}
+
+/* ── MODALS ──────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .modal-box, .val-modal {
+    width: 95vw !important;
+    padding: 24px 16px !important;
+    border-radius: 16px;
+  }
+  .val-modal-body {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  .val-section:last-child { grid-column: 1; }
+  .val-modal-header { padding: 16px 20px; flex-wrap: wrap; gap: 10px; }
+  .val-actions { padding: 14px 16px; }
+  .payment-options { flex-direction: column; }
+  .role-grid { gap: 6px; }
+}
+
+/* ── MOBILE SIDEBAR TOGGLE ───────────────────────────────────── */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: 1.5px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--navy);
+  font-family: inherit;
+  font-size: .85rem;
+  font-weight: 600;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .mobile-menu-btn { display: flex; }
+}
+
+/* ── VALIDATION MODAL RESPONSIVE ────────────────────────────── */
+@media (max-width: 600px) {
+  .val-modal-body { grid-template-columns: 1fr; padding: 12px 16px; }
+  .val-section { margin: 4px 0; }
+}
+
+/* ── TRACKING EXTRA ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .item-table th,
+  .item-table td { padding: 10px 12px; font-size: .82rem; }
+  .item-list-card { padding: 20px 16px; }
+}

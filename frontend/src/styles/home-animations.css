@@ -1,0 +1,255 @@
+/* ================================================================
+   HOME PAGE ANIMATIONS
+   All animations use transform/opacity only — no layout reflow,
+   stays at 60 fps on GPU compositor thread.
+
+   CSS variables set by the scroll listener in HomePage.jsx:
+     --bg-drift   : px offset for parallax background (increases with scroll)
+     --scroll-pct : 0→1 page scroll progress (drives the hero progress bar)
+   ================================================================ */
+
+/* ── Parallax background container ──────────────────────────────
+   Moves at 12% of scroll speed so it appears further away.
+   .hero already has overflow:hidden — it clips the drift. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform: translateY(var(--bg-drift, 0));
+  will-change: transform; /* promote to own GPU layer */
+}
+
+/* Drifting dot grid — subtle map/network texture */
+.map-dots {
+  position: absolute;
+  inset: -48px; /* overscan covers parallax gap at edges */
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.06) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 34px 34px;
+  animation: dotDrift 28s linear infinite;
+}
+
+/* dots drift diagonally → implies movement across a map */
+@keyframes dotDrift {
+  from { background-position: 0 0; }
+  to   { background-position: 34px 34px; }
+}
+
+/* ── SVG route lines ────────────────────────────────────────────
+   Dashed stroke-dashoffset animation makes dashes flow like
+   moving roads. Three paths at different speeds + directions. */
+.route-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.rp {
+  fill: none;
+  stroke-dasharray: 14 10;
+  stroke-linecap: round;
+}
+
+.rp-1 {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 2;
+  animation: dashFlow 11s linear infinite;
+}
+
+.rp-2 {
+  stroke: rgba(249, 115, 22, 0.22);
+  stroke-width: 1.5;
+  animation: dashFlow 17s linear infinite reverse;
+}
+
+.rp-3 {
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 1;
+  animation: dashFlow 23s linear infinite;
+}
+
+/* advancing dashoffset makes dashes appear to travel forward */
+@keyframes dashFlow {
+  to { stroke-dashoffset: -96; }
+}
+
+/* ── GPS location pins ──────────────────────────────────────────
+   Each pin floats up/down and emits an expanding ripple ring,
+   simulating a live GPS beacon on a tracking map. */
+.loc-pin {
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+.loc-pin::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--orange); /* default ring color */
+  opacity: 0;
+  animation: gpsRing 2.6s ease-out infinite;
+}
+
+/* staggered positions + delays → feels organic, not robotic */
+.lp-1 { top: 20%; left: 10%;  animation: pinFloat 3.2s ease-in-out infinite; }
+.lp-2 { top: 58%; left: 38%;  background: rgba(255,255,255,.55); animation: pinFloat 3.2s ease-in-out 0.9s  infinite; }
+.lp-2::after { border-color: rgba(255,255,255,.55); animation-delay: 0.9s; }
+.lp-3 { top: 26%; left: 74%;  animation: pinFloat 3.2s ease-in-out 1.7s  infinite; }
+.lp-4 { top: 68%; left: 88%;  background: rgba(255,255,255,.55); animation: pinFloat 3.2s ease-in-out 2.5s  infinite; }
+.lp-4::after { border-color: rgba(255,255,255,.55); animation-delay: 2.5s; }
+
+@keyframes pinFloat {
+  0%, 100% { transform: translateY(0)   scale(1);    opacity: 0.75; }
+  50%       { transform: translateY(-5px) scale(1.2); opacity: 1; }
+}
+
+/* ring expands outward and fades — GPS "ping" effect */
+@keyframes gpsRing {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(3.4); opacity: 0; }
+}
+
+/* ── Truck rail ─────────────────────────────────────────────────
+   Trucks slide from off-screen left to off-screen right in a
+   seamless loop. cubic-bezier gives smooth momentum (not linear). */
+.truck-rail {
+  position: absolute;
+  bottom: 12%;
+  left: 0;
+  right: 0;
+  height: 40px;
+  overflow: hidden; /* clips trucks outside the hero width */
+  pointer-events: none;
+}
+
+.truck {
+  position: absolute;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.18));
+  will-change: transform, opacity;
+}
+
+/* Truck 1: navy, 16 s cycle */
+.tk-1 {
+  color: var(--navy);
+  animation: truckSlide 16s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+/* Truck 2: orange accent, 22 s cycle, offset so trucks don't overlap */
+.tk-2 {
+  color: var(--orange);
+  animation: truckSlide 22s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite -10s;
+}
+
+/* Trucks enter from off-right, cross the viewport, exit off-left.
+   scaleX(-1) flips the icon so it faces the direction of travel (left). */
+@keyframes truckSlide {
+  0%   { transform: translateX(calc(100vw + 160px)) scaleX(-1); opacity: 0; }
+  5%   { transform: translateX(calc(100vw + 80px))  scaleX(-1); opacity: 1; }
+  95%  { transform: translateX(-80px)               scaleX(-1); opacity: 1; }
+  100% { transform: translateX(-160px)              scaleX(-1); opacity: 0; }
+}
+
+/* ── Scroll progress bar ────────────────────────────────────────
+   Thin line at the bottom of the hero fills as the page scrolls.
+   Width driven by --scroll-pct (set by JS, 0→1). */
+.hero-animated::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--navy), var(--orange));
+  width: calc(var(--scroll-pct, 0) * 100%);
+  border-radius: 0 2px 2px 0;
+  transition: width 0.15s linear;
+  z-index: 3;
+}
+
+/* ── Hero content layer ─────────────────────────────────────────
+   Sits above hero-bg (z-index 2) and truck-rail (no z-index). */
+.hero-body {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Stat card micro-interactions ───────────────────────────────
+   Springy cubic-bezier (overshoot) makes the lift feel physical. */
+.stat-card {
+  transition:
+    transform  0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.4s ease,
+    background 0.3s ease !important;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.025) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.30) !important;
+  background: rgba(255,255,255,.14) !important;
+}
+
+/* ── Track button micro-interaction ─────────────────────────────
+   Bounce on hover, shrink on press. Orange glow matches brand. */
+.track-btn {
+  transition:
+    background   0.2s,
+    transform    0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow   0.25s ease !important;
+}
+
+.track-btn:hover:not(:disabled) {
+  transform: scale(1.04) !important;
+  box-shadow: 0 10px 32px rgba(249, 115, 22, 0.48) !important;
+  filter: brightness(1.07) !important;
+}
+
+.track-btn:active:not(:disabled) {
+  transform: scale(0.97) !important;
+  transition-duration: 0.1s !important;
+}
+
+/* ── Track input focus glow ──────────────────────────────────── */
+.track-input {
+  transition: border-color 0.25s, box-shadow 0.3s !important;
+}
+
+.track-input:focus {
+  border-color: var(--navy) !important;
+  box-shadow: 0 0 0 3.5px rgba(26, 46, 110, 0.10) !important;
+}
+
+.track-input-error {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.10) !important;
+}
+
+/* ── Track section entrance ──────────────────────────────────── */
+.track-section {
+  animation: revealUp 0.65s ease 0.1s both;
+}
+
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Mobile: simplify to save resources ─────────────────────── */
+@media (max-width: 768px) {
+  .map-dots,
+  .route-svg,
+  .loc-pin { display: none; }
+
+  .tk-1 { animation-duration: 10s; }
+  .tk-2 { animation-duration: 14s; }
+}

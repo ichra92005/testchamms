@@ -1,0 +1,241 @@
+<mxfile host="app.diagrams.net" agent="Antigravity AI Agent" pages="2">
+  <diagram id="page1" name="Package Diagram">
+    <mxGraphModel dx="1500" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="fe_container" value="Frontend Application (React + Vite)" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=0;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#E6F2FF;strokeColor=#1A2E6E;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="50" width="420" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_comp" value="Components" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;startSize=26;fillColor=#F2F8FF;strokeColor=#4A90E2;rounded=1;" vertex="1" parent="fe_container">
+          <mxGeometry x="20" y="50" width="380" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_c_navbar" value="Navbar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_comp">
+          <mxGeometry x="15" y="50" width="65" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_c_footer" value="Footer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_comp">
+          <mxGeometry x="87" y="50" width="65" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_c_stepper" value="Stepper" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_comp">
+          <mxGeometry x="159" y="50" width="65" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_c_routemap" value="RouteMap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_comp">
+          <mxGeometry x="231" y="50" width="65" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_c_trackingslip" value="TrackingSlip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_comp">
+          <mxGeometry x="303" y="50" width="65" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_pages" value="Pages" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;startSize=26;fillColor=#F2F8FF;strokeColor=#4A90E2;rounded=1;" vertex="1" parent="fe_container">
+          <mxGeometry x="20" y="200" width="380" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_p_home" value="HomePage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_pages">
+          <mxGeometry x="15" y="40" width="100" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_p_track" value="TrackingResultPage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_pages">
+          <mxGeometry x="125" y="40" width="130" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_p_auth" value="AuthPage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_pages">
+          <mxGeometry x="265" y="40" width="100" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_p_dash" value="Role Dashboards" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;startSize=22;fillColor=#FFFFFF;strokeColor=#4A90E2;rounded=1;" vertex="1" parent="fe_pages">
+          <mxGeometry x="15" y="100" width="350" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_d_admin" value="AdminDash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_p_dash">
+          <mxGeometry x="10" y="30" width="75" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_d_agent" value="AgentDash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_p_dash">
+          <mxGeometry x="93" y="30" width="75" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_d_client" value="ClientDash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_p_dash">
+          <mxGeometry x="176" y="30" width="75" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_d_driver" value="DriverDash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_p_dash">
+          <mxGeometry x="259" y="30" width="75" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_services" value="Services" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;startSize=26;fillColor=#F2F8FF;strokeColor=#4A90E2;rounded=1;" vertex="1" parent="fe_container">
+          <mxGeometry x="20" y="420" width="380" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="fe_s_api" value="api.js (Axios)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1A2E6E;fontColor=#1A2E6E;strokeWidth=1.5;" vertex="1" parent="fe_services">
+          <mxGeometry x="120" y="45" width="140" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_container" value="Backend Server (Laravel API)" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=0;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#FFF0E6;strokeColor=#F97316;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="50" width="440" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="be_routes" value="Routes" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;startSize=26;fillColor=#FFFAF5;strokeColor=#FF9955;rounded=1;" vertex="1" parent="be_container">
+          <mxGeometry x="20" y="50" width="400" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="be_r_api" value="api.php" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_routes">
+          <mxGeometry x="140" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="be_controllers" value="Controllers" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;startSize=26;fillColor=#FFFAF5;strokeColor=#FF9955;rounded=1;" vertex="1" parent="be_container">
+          <mxGeometry x="20" y="170" width="400" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="be_c_authcontroller" value="AuthController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_controllers">
+          <mxGeometry x="15" y="40" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_c_parcelcontroller" value="ParcelController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_controllers">
+          <mxGeometry x="140" y="40" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_c_usercontroller" value="UserController" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_controllers">
+          <mxGeometry x="265" y="40" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_c_locationctrl" value="LocationCtrl" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_controllers">
+          <mxGeometry x="15" y="110" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_c_paymentproofctrl" value="PaymentProofCtrl" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_controllers">
+          <mxGeometry x="140" y="110" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_c_notificationctrl" value="NotificationCtrl" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_controllers">
+          <mxGeometry x="265" y="110" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_models" value="Models (Eloquent ORM)" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;startSize=26;fillColor=#FFFAF5;strokeColor=#FF9955;rounded=1;" vertex="1" parent="be_container">
+          <mxGeometry x="20" y="390" width="400" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="be_m_user" value="User" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_models">
+          <mxGeometry x="20" y="45" width="80" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_m_parcel" value="Parcel" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_models">
+          <mxGeometry x="110" y="45" width="80" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_m_statushistory" value="StatusHistory" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_models">
+          <mxGeometry x="200" y="45" width="110" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="be_m_notification" value="Notification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F97316;fontColor=#D95F02;strokeWidth=1.5;" vertex="1" parent="be_models">
+          <mxGeometry x="320" y="45" width="70" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="db_container" value="Database (Supabase)" style="swimlane;html=1;whiteSpace=wrap;align=center;verticalAlign=top;startSize=30;fillColor=#E6FFE6;strokeColor=#22C55E;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="50" width="200" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="db_postgres" value="PostgreSQL DB&#xa;(tables: users,&#xa;parcels, notifications,&#xa;parcel_status_history)" style="shape=datastore;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#22C55E;fontColor=#1E7D34;strokeWidth=2;" vertex="1" parent="db_container">
+          <mxGeometry x="20" y="200" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="conn_pages_comp" value="uses" style="endArrow=classic;html=1;rounded=1;strokeColor=#1A2E6E;dashed=1;" edge="1" parent="1" source="fe_pages" target="fe_comp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn_pages_serv" value="" style="endArrow=classic;html=1;rounded=1;strokeColor=#1A2E6E;" edge="1" parent="1" source="fe_pages" target="fe_services">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn_serv_route" value="JSON HTTP Requests" style="endArrow=classic;html=1;rounded=1;strokeColor=#F97316;strokeWidth=1.5;" edge="1" parent="1" source="fe_s_api" target="be_r_api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn_route_ctrl" value="" style="endArrow=classic;html=1;rounded=1;strokeColor=#F97316;" edge="1" parent="1" source="be_routes" target="be_controllers">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn_ctrl_model" value="" style="endArrow=classic;html=1;rounded=1;strokeColor=#F97316;" edge="1" parent="1" source="be_controllers" target="be_models">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn_model_db" value="Eloquent Sync" style="endArrow=classic;html=1;rounded=1;strokeColor=#22C55E;strokeWidth=1.5;" edge="1" parent="1" source="be_models" target="db_postgres">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="page2" name="Class Diagram">
+    <mxGraphModel dx="1212" dy="675" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1400" background="light-dark(#FFFFFF,#FFFFFF)" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cl_user" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;User&lt;/b&gt;" vertex="1">
+          <mxGeometry height="220" width="180" x="50" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_user_attrs" parent="cl_user" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ id : int&lt;br&gt;+ name : string&lt;br&gt;+ email : string&lt;br&gt;+ phone : string&lt;br&gt;+ role : string&lt;br&gt;+ wilaya : string&lt;br&gt;+ route_from : string&lt;br&gt;+ route_to : string&lt;br&gt;" vertex="1">
+          <mxGeometry height="143" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_user_methods" parent="cl_user" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ parcels() : HasMany&lt;br&gt;+ notifications() : HasMany&lt;br&gt;" vertex="1">
+          <mxGeometry height="47" width="180" y="169" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_parcel" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;Parcel&lt;/b&gt;" vertex="1">
+          <mxGeometry height="270" width="240" x="360" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_parcel_attrs" parent="cl_parcel" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ id : int&lt;br&gt;+ tracking_code : string&lt;br&gt;+ status : string&lt;br&gt;+ sender_name : string&lt;br&gt;+ receiver_name : string&lt;br&gt;+ origin_wilaya : string&lt;br&gt;+ destination_wilaya : string&lt;br&gt;+ driver_lat : float&lt;br&gt;+ driver_lng : float&lt;br&gt;+ payment_proof : string&lt;br&gt;" vertex="1">
+          <mxGeometry height="175" width="240" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_parcel_methods" parent="cl_parcel" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ deliveryMan() : BelongsTo&lt;br&gt;+ createdBy() : BelongsTo&lt;br&gt;+ statusHistory() : HasMany&lt;br&gt;" vertex="1">
+          <mxGeometry height="70" width="240" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_history" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;ParcelStatusHistory&lt;/b&gt;" vertex="1">
+          <mxGeometry height="162" width="200" x="670" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_history_attrs" parent="cl_history" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ id : int&lt;br&gt;+ parcel_id : int&lt;br&gt;+ status : string&lt;br&gt;+ created_at : datetime&lt;br&gt;" vertex="1">
+          <mxGeometry height="79" width="200" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_history_methods" parent="cl_history" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ parcel() : BelongsTo&lt;br&gt;" vertex="1">
+          <mxGeometry height="57" width="200" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_notif" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;Notification&lt;/b&gt;" vertex="1">
+          <mxGeometry height="161" width="180" x="890" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_notif_attrs" parent="cl_notif" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ id : int&lt;br&gt;+ user_id : int&lt;br&gt;+ message : string&lt;br&gt;+ read_at : datetime&lt;br&gt;" vertex="1">
+          <mxGeometry height="79" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_notif_methods" parent="cl_notif" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ user() : BelongsTo&lt;br&gt;" vertex="1">
+          <mxGeometry height="56" width="180" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_auth_ctrl" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;AuthController&lt;/b&gt;" vertex="1">
+          <mxGeometry height="120" width="200" x="50" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_auth_ctrl_attrs" parent="cl_auth_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;" vertex="1">
+          <mxGeometry height="15" width="200" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_auth_ctrl_methods" parent="cl_auth_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ login()&lt;br&gt;+ register()&lt;br&gt;+ logout()&lt;br&gt;+ updateProfile()&lt;br&gt;" vertex="1">
+          <mxGeometry height="79" width="200" y="41" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_parcel_ctrl" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;ParcelController&lt;/b&gt;" vertex="1">
+          <mxGeometry height="140" width="220" x="300" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_parcel_ctrl_attrs" parent="cl_parcel_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;" vertex="1">
+          <mxGeometry height="15" width="220" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_parcel_ctrl_methods" parent="cl_parcel_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ index()&lt;br&gt;+ store()&lt;br&gt;+ updateStatus()&lt;br&gt;+ assign()&lt;br&gt;+ track()&lt;br&gt;" vertex="1">
+          <mxGeometry height="99" width="220" y="41" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_loc_ctrl" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;LocationController&lt;/b&gt;" vertex="1">
+          <mxGeometry height="101" width="180" x="580" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_loc_ctrl_attrs" parent="cl_loc_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;" vertex="1">
+          <mxGeometry height="15" width="180" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_loc_ctrl_methods" parent="cl_loc_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ get()&lt;br&gt;+ update()&lt;br&gt;" vertex="1">
+          <mxGeometry height="60" width="180" y="41" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pay_ctrl" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;PaymentProofController&lt;/b&gt;" vertex="1">
+          <mxGeometry height="101" width="200" x="810" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pay_ctrl_attrs" parent="cl_pay_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;" vertex="1">
+          <mxGeometry height="15" width="200" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_pay_ctrl_methods" parent="cl_pay_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ upload()&lt;br&gt;+ show()&lt;br&gt;" vertex="1">
+          <mxGeometry height="60" width="200" y="41" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_admin_ctrl" parent="1" style="swimlane;fontStyle=0;childLayout=poseLayout;startSize=26;horizontal=1;metaEdit=1;html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;b&gt;AdminController&lt;/b&gt;" vertex="1">
+          <mxGeometry height="120" width="200" x="1060" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_admin_ctrl_attrs" parent="cl_admin_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;" vertex="1">
+          <mxGeometry height="15" width="200" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_admin_ctrl_methods" parent="cl_admin_ctrl" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[];portConstraint=eastwest;html=1;whiteSpace=wrap;fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;hr&gt;+ users()&lt;br&gt;+ show()&lt;br&gt;+ update()&lt;br&gt;+ deleteUser()&lt;br&gt;" vertex="1">
+          <mxGeometry height="79" width="200" y="41" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_u_p_creates" edge="1" parent="1" source="cl_user" style="endArrow=classic;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;endSize=6;startArrow=none;startSize=6;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;fontColor=light-dark(#000000,#121212);fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 255), rgb(255, 255, 255));&quot;&gt;creates&lt;/span&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_u_p_delivers" edge="1" parent="1" source="cl_user" style="endArrow=classic;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;exitY=0.75;exitX=1;fontColor=light-dark(#000000,#121212);fillColor=#cce5ff;strokeColor=#36393d;" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 255), rgb(255, 255, 255));&quot;&gt;delivers&lt;/span&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_p_h" edge="1" parent="1" source="cl_parcel" style="endArrow=classic;html=1;rounded=1;fontColor=light-dark(#000000,#121212);fillColor=#eeeeee;strokeColor=#36393d;" target="cl_history" value="&lt;span style=&quot;background-color: rgb(0, 0, 0);&quot;&gt;logs&lt;/span&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_u_n" edge="1" parent="1" source="cl_user" style="endArrow=classic;html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;exitY=0;exitX=0.5;entryY=0;entryX=0.5;fontColor=light-dark(#000000,#121212);fillColor=#cce5ff;strokeColor=#36393d;" target="cl_notif" value="&lt;span style=&quot;background-color: light-dark(rgb(255, 255, 255), rgb(255, 255, 255));&quot;&gt;receives&lt;/span&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="D1M2fEmwOZifkWEGmNzH-1" edge="1" parent="1" source="cl_parcel_methods" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="cl_history_methods" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

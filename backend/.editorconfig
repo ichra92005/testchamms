@@ -1,0 +1,38 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[{compose,docker-compose}.{yml,yaml}]
+indent_size = 4
+
+
+
+Redesign our current homepage to look highly professional, modern, and visually appealing while keeping the exact same user flow, text, and call-to-action (CTA) buttons.
+
+What to Keep: * The current structure and layout.
+
+All existing buttons, links, and navigation items (do not add or remove features).
+
+The core message/copy.
+
+What to Improve (The Aesthetic):
+
+
+
+UI Elements: Update buttons with modern styling (e.g., subtle rounded corners, crisp hover states, elegant drop shadows).
+
+Visual Assets: Use high-quality, professional imagery or clean vector illustrations that match a cohesive color scheme.
+
+Overall Vibe: Sleek, trustworthy, premium, and uncluttered
