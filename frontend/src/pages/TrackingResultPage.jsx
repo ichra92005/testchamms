@@ -3,6 +3,8 @@ import Stepper from '../components/Stepper'
 import PaymentProofUpload from '../components/PaymentProofUpload'
 import TrackingSlip from '../components/TrackingSlip'
 import { PackageIcon, CalendarIcon, ClockIcon, MapPinIcon, UserIcon, PhoneIcon, CashIcon, CardIcon, ArrowLeftIcon, CheckIcon, XIcon, RefreshIcon, PrinterIcon } from '../components/Icons'
+import { ToastContainer, useToast } from '../components/Toast'
+import { Skeleton, SkeletonCircle, SkeletonText } from '../components/Skeleton'
 import api from '../services/api'
 import '../styles/history.css'
 
@@ -127,19 +129,20 @@ function DeliveryMap({ from, to, trackingCode, isLive }) {
 
 function StarRating({value,onChange,readonly=false}){const[hovered,setHovered]=useState(0);return(<div style={{display:'flex',gap:6}}>{[1,2,3,4,5].map(s=>(<span key={s} onClick={()=>!readonly&&onChange(s)} onMouseEnter={()=>!readonly&&setHovered(s)} onMouseLeave={()=>!readonly&&setHovered(0)} style={{fontSize:'2rem',cursor:readonly?'default':'pointer',color:s<=(hovered||value)?'#f97316':'#e2e8f0',transition:'color .15s',userSelect:'none'}}>★</span>))}</div>)}
 
-function ConfirmReceptionModal({parcel,onClose,onSuccess}){const[rating,setRating]=useState(0);const[comment,setComment]=useState('');const[loading,setLoading]=useState(false);const[error,setError]=useState('');const handleSubmit=async()=>{if(rating===0){setError('Please select a rating.');return}setLoading(true);setError('');try{await api.post(`/parcels/${parcel.id}/confirm-reception`,{rating,comment});onSuccess()}catch(err){setError(err.response?.data?.message||'Failed to confirm.')}finally{setLoading(false)}};return(<div className="modal-overlay" onClick={onClose}><div className="modal-box" style={{width:460}} onClick={e=>e.stopPropagation()}><button className="modal-close-btn" onClick={onClose}>✕</button><div style={{textAlign:'center',marginBottom:24}}><div style={{width:64,height:64,borderRadius:'50%',background:'#f0fdf4',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}><CheckIcon size={28} style={{color:'#22c55e'}}/></div><h2 className="modal-title">Confirm Reception</h2><p className="modal-sub">Parcel: <strong>{parcel.tracking_code}</strong></p></div>{error&&<div className="form-error">{error}</div>}<div className="field-group"><label className="field-label">Rate your delivery experience</label><StarRating value={rating} onChange={setRating}/><p style={{fontSize:'.78rem',color:'#94a3b8',marginTop:4}}>{rating===1&&'Very poor'}{rating===2&&'Poor'}{rating===3&&'Average'}{rating===4&&'Good'}{rating===5&&'Excellent!'}</p></div><div className="field-group"><label className="field-label">Comment (optional)</label><textarea className="field-textarea" placeholder="Share your experience..." rows={3} value={comment} onChange={e=>setComment(e.target.value)}/></div><div className="modal-actions"><button className="btn-secondary" onClick={onClose}>Cancel</button><button className="btn-primary" onClick={handleSubmit} disabled={loading||rating===0} style={{background:rating>0?'#22c55e':undefined}}><span style={{display:'flex',alignItems:'center',gap:8}}><CheckIcon size={15}/> {loading?'Confirming...':'Confirm Reception'}</span></button></div></div></div>)}
+function ConfirmReceptionModal({parcel,onClose,onSuccess}){const[rating,setRating]=useState(0);const[comment,setComment]=useState('');const[loading,setLoading]=useState(false);const[error,setError]=useState('');const handleSubmit=async()=>{if(rating===0){setError('Please select a rating.');return}setLoading(true);setError('');try{await api.post(`/parcels/${parcel.id}/confirm-reception`,{rating,comment});onSuccess(rating)}catch(err){setError(err.response?.data?.message||'Failed to confirm.')}finally{setLoading(false)}};return(<div className="modal-overlay" onClick={onClose}><div className="modal-box" style={{width:460}} onClick={e=>e.stopPropagation()}><button className="modal-close-btn" onClick={onClose}>✕</button><div style={{textAlign:'center',marginBottom:24}}><div style={{width:64,height:64,borderRadius:'50%',background:'#f0fdf4',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 16px'}}><CheckIcon size={28} style={{color:'#22c55e'}}/></div><h2 className="modal-title">Confirm Reception</h2><p className="modal-sub">Parcel: <strong>{parcel.tracking_code}</strong></p></div>{error&&<div className="form-error">{error}</div>}<div className="field-group"><label className="field-label">Rate your delivery experience</label><StarRating value={rating} onChange={setRating}/><p style={{fontSize:'.78rem',color:'#94a3b8',marginTop:4}}>{rating===1&&'Very poor'}{rating===2&&'Poor'}{rating===3&&'Average'}{rating===4&&'Good'}{rating===5&&'Excellent!'}</p></div><div className="field-group"><label className="field-label">Comment (optional)</label><textarea className="field-textarea" placeholder="Share your experience..." rows={3} value={comment} onChange={e=>setComment(e.target.value)}/></div><div className="modal-actions"><button className="btn-secondary" onClick={onClose}>Cancel</button><button className="btn-primary" onClick={handleSubmit} disabled={loading||rating===0} style={{background:rating>0?'#22c55e':undefined}}><span style={{display:'flex',alignItems:'center',gap:8}}><CheckIcon size={15}/> {loading?'Confirming...':'Confirm Reception'}</span></button></div></div></div>)}
 
 const STATUS_STEPS=['pending','registered','assigned','out_for_delivery','delivered']
 const STEP_LABELS=['Order Received','Registered','In Transit','On the Way','Delivered']
 
 function transformParcel(p){const ci=STATUS_STEPS.indexOf(p.status);const steps=STATUS_STEPS.map((s,i)=>({label:STEP_LABELS[i],date:i<=ci?new Date(p.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—',status:i<ci?'done':i===ci?'active':'pending'}));return{id:p.tracking_code,steps,from:p.pickup_location||p.origin_wilaya||'Origin',to:p.destination||p.destination_wilaya||'Destination',pickup:{name:p.sender_name||'Sender',address:p.pickup_location||'—'},dropoff:{name:p.receiver_name,address:p.delivery_address||p.destination||'—'},customer:{fullName:p.receiver_name,phone:p.receiver_phone},pickupDate:new Date(p.created_at).toLocaleString('en-US',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),estimateDrop:'3–5 Days',returnTime:'In 7 Days'}}
 
-export default function TrackingResultPage({ parcel, onBack }) {
+export default function TrackingResultPage({ parcel, onBack, loading = false }) {
   const [showConfirm,setShowConfirm]=useState(false)
   const [showSlip,setShowSlip]=useState(false)
   const [confirmed,setConfirmed]=useState(false)
   const [currentParcel,setCurrentParcel]=useState(parcel)
   const [lastUpdate,setLastUpdate]=useState(new Date())
+  const { toasts, toast, removeToast } = useToast()
 
   const isLive = currentParcel?.status === 'out_for_delivery'
 
@@ -157,6 +160,38 @@ export default function TrackingResultPage({ parcel, onBack }) {
     const interval = setInterval(refreshParcel, 30000)
     return () => clearInterval(interval)
   }, [isLive, refreshParcel])
+
+  if(loading) return (
+    <div className="result-page">
+      <button className="back-link" onClick={onBack} style={{display:'flex',alignItems:'center',gap:8}}><ArrowLeftIcon size={16}/> Back to Tracking</button>
+
+      {/* Title */}
+      <Skeleton width={220} height={28} rounded={6} style={{margin:'8px 0 28px'}}/>
+
+      {/* Stepper */}
+      <div style={{display:'flex',gap:16,marginBottom:28}}>
+        {[0,1,2,3,4].map(i => (
+          <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:8}}>
+            <SkeletonCircle size={36}/>
+            <Skeleton width="70%" height={10}/>
+          </div>
+        ))}
+      </div>
+
+      {/* Info cards */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:20,marginBottom:28}}>
+        {[0,1,2].map(i => (
+          <div key={i} style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:16,padding:20}}>
+            <Skeleton width={140} height={14} rounded={6} style={{marginBottom:16}}/>
+            <SkeletonText lines={5}/>
+          </div>
+        ))}
+      </div>
+
+      {/* Map area */}
+      <Skeleton width="100%" height={400} rounded={16}/>
+    </div>
+  )
 
   if(!currentParcel) return (
     <div className="result-page">
@@ -219,7 +254,7 @@ export default function TrackingResultPage({ parcel, onBack }) {
         </div>
       )}
 
-      <PaymentProofUpload parcel={currentParcel} onSuccess={refreshParcel}/>
+      <PaymentProofUpload parcel={currentParcel} onSuccess={() => { refreshParcel(); toast.success('Payment proof uploaded') }}/>
 
       {isDelivered&&!isConfirmed&&(
         <div style={{background:'#f0fdf4',border:'1.5px solid #bbf7d0',borderRadius:16,padding:'20px 24px',marginBottom:28,display:'flex',alignItems:'center',justifyContent:'space-between',gap:16}}>
@@ -272,7 +307,8 @@ export default function TrackingResultPage({ parcel, onBack }) {
 
       <DeliveryMap from={from} to={to} trackingCode={currentParcel.tracking_code} isLive={isLive}/>
 
-      {showConfirm&&<ConfirmReceptionModal parcel={currentParcel} onClose={()=>setShowConfirm(false)} onSuccess={async()=>{setShowConfirm(false);setConfirmed(true);await refreshParcel()}}/>}
+      {showConfirm&&<ConfirmReceptionModal parcel={currentParcel} onClose={()=>setShowConfirm(false)} onSuccess={async(rated)=>{setShowConfirm(false);setConfirmed(true);await refreshParcel();toast.success('Reception confirmed');if(rated)toast.info('Thank you for your rating!')}}/>}
+      <ToastContainer toasts={toasts} removeToast={removeToast}/>
       {showSlip&&<TrackingSlip parcel={currentParcel} onClose={()=>setShowSlip(false)}/>}
     </div>
   )

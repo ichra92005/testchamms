@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
-import { CheckIcon, XIcon } from './Icons'
+import { CheckIcon, XIcon, AlertIcon } from './Icons'
 
 // ── Toast Component ───────────────────────────────────────────
 function Toast({ id, message, type, onRemove }) {
@@ -7,6 +7,7 @@ function Toast({ id, message, type, onRemove }) {
     success: { bg: '#f0fdf4', border: '#bbf7d0', color: '#166534', icon: <CheckIcon size={16}/> },
     error:   { bg: '#fef2f2', border: '#fecaca', color: '#dc2626', icon: <XIcon size={16}/> },
     info:    { bg: '#eff6ff', border: '#bfdbfe', color: '#1d4ed8', icon: null },
+    warning: { bg: '#fffbeb', border: '#fde68a', color: '#d97706', icon: <AlertIcon size={16}/> },
   }
   const c = config[type] || config.info
 
@@ -80,6 +81,7 @@ export function useToast() {
     success: (msg) => addToast(msg, 'success'),
     error:   (msg) => addToast(msg, 'error'),
     info:    (msg) => addToast(msg, 'info'),
+    warning: (msg) => addToast(msg, 'warning'),
   }
 
   return { toasts, toast, removeToast }

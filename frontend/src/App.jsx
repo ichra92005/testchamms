@@ -56,10 +56,11 @@ function App() {
       } finally { setLoading(false) }
     }
 
-    if (searched) return (
+    if (searched || loading) return (
       <>
         <TrackingResultPage
           parcel={trackingResult}
+          loading={loading}
           onBack={() => { setSearched(false); setTrackingResult(null) }}
         />
       </>
@@ -100,8 +101,8 @@ function App() {
         onStaffClick={() => setShowAuth('staff')}
         onClientClick={() => setShowAuth('client')}
       />
-      {searched
-        ? <TrackingResultPage parcel={trackingResult} onBack={handleBack}/>
+      {(searched || loading)
+        ? <TrackingResultPage parcel={trackingResult} loading={loading} onBack={handleBack}/>
         : <HomePage onTrack={handleTrack} loading={loading} error={error}/>
       }
       <Footer/>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -24,7 +26,7 @@ class AdminController extends Controller
         $request->validate([
             'name'        => ['required', 'string', 'min:3', 'max:255', 'regex:/^[\pL\s\-\']+$/u'],
             'phone'       => ['nullable', 'string', 'regex:/^(\+213|0)[\d\s]{7,12}$/'],
-            'email'       => 'required|email|unique:users,email,' . $id,
+            'email'       => ['required', 'email', Rule::unique('users', 'email')->where(fn ($q) => $q->where('role', $request->role))->ignore($id)],
             'role'        => 'required|in:admin,agency,driver,client',
             'driver_type' => 'nullable|in:intra,inter',
             'wilaya'      => 'nullable|string',
@@ -49,5 +51,16 @@ class AdminController extends Controller
         }
         $user->delete();
         return response()->json(['message' => 'User deleted.']);
+    }
+
+    public function sidebarCounts()
+    {
+        return response()->json([
+            'activeParcels' => DB::table('parcels')
+                ->whereIn('status', ['pending', 'registered', 'assigned', 'out_for_delivery'])
+                ->count(),
+            'totalClients' => User::where('role', 'client')->count(),
+            'totalStaff'   => User::whereIn('role', ['admin', 'agency', 'driver'])->count(),
+        ]);
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -21,8 +22,12 @@ class AuthController extends Controller
         if ($request->has('staffId')) {
             $user = User::where('staff_id', $request->staffId)->first();
         } else {
+            // Email-based login is always for the client role.
+            // Staff log in via their staff_id, not email.
             $request->validate(['email' => 'required|email']);
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)
+                        ->where('role', 'client')
+                        ->first();
         }
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
@@ -55,8 +60,12 @@ class AuthController extends Controller
                 'name'        => ['required', 'string', 'min:3', 'max:255', 'regex:/^[\pL\s\-\']+$/u'],
                 'staffId'     => ['required', 'string', 'regex:/^[A-Za-z]{2}-\d{3}$/', 'unique:users,staff_id'],
                 'phone'       => ['required', 'string', 'regex:/^(\+213|0)[\d\s]{7,12}$/'],
-                'email'       => 'required|email|unique:users',
-                'password'    => ['required', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/'],
+                'email'       => ['required', 'email', Rule::unique('users')->where(fn ($q) => $q->where('role', $request->role))],
+                'password'    => [
+                    'required', 'string', 'min:8',
+                    'regex:/[A-Z]/', 'regex:/[a-z]/',
+                    'regex:/[0-9]/', 'regex:/[!@#$%^&*(),.?":{}|<>]/',
+                ],
                 'role'        => 'required|in:admin,agency,driver',
                 'driver_type' => 'nullable|in:intra,inter',
                 'wilaya'      => 'nullable|string',
@@ -67,7 +76,8 @@ class AuthController extends Controller
                 'name.regex'     => 'Name must contain letters only, no numbers or special characters.',
                 'staffId.regex'  => 'Staff ID must follow format: AG-001, DR-001 or AD-001.',
                 'phone.regex'    => 'Please enter a valid Algerian phone number (e.g. 0555 000 000).',
-                'password.regex' => 'Password must contain at least one letter and one number.',
+                'password.min'   => 'Password must be at least 8 characters.',
+                'password.regex' => 'Password must include uppercase, lowercase, number, and special character.',
             ]);
 
             $user = User::create([
@@ -102,13 +112,19 @@ class AuthController extends Controller
             $request->validate([
                 'name'     => ['required', 'string', 'min:3', 'max:255', 'regex:/^[\pL\s\-\']+$/u'],
                 'phone'    => ['required', 'string', 'regex:/^(\+213|0)[\d\s]{7,12}$/'],
-                'email'    => 'required|email|unique:users',
-                'password' => ['required', 'min:8', 'regex:/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/'],
+                'email'    => ['required', 'email', Rule::unique('users')->where(fn ($q) => $q->where('role', 'client'))],
+                'password' => [
+                    'required', 'string', 'min:8',
+                    'regex:/[A-Z]/', 'regex:/[a-z]/',
+                    'regex:/[0-9]/', 'regex:/[!@#$%^&*(),.?":{}|<>]/',
+                ],
             ], [
                 'name.min'       => 'Name must be at least 3 characters.',
                 'name.regex'     => 'Name must contain letters only, no numbers or special characters.',
                 'phone.regex'    => 'Please enter a valid Algerian phone number (e.g. 0555 000 000).',
-                'password.regex' => 'Password must contain at least one letter and one number.',
+                'password.min'   => 'Password must be at least 8 characters.',
+                'password.regex' => 'Password must include uppercase, lowercase, number, and special character.',
+                'email.unique'   => 'This email is already registered as a client. Try logging in instead.',
             ]);
 
             $user = User::create([
@@ -140,7 +156,9 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $user = User::where('email', $request->email)->first();
+        // Prefer the client account; fall back to any account with this email
+        $user = User::where('email', $request->email)->where('role', 'client')->first()
+             ?? User::where('email', $request->email)->first();
 
         if ($user) {
             $resetUrl = $this->generateResetToken($request->email, hours: 1);
@@ -163,8 +181,15 @@ class AuthController extends Controller
         $request->validate([
             'email'                 => 'required|email',
             'token'                 => 'required|string',
-            'password'              => 'required|min:8|confirmed',
+            'password'              => [
+                'required', 'string', 'min:8', 'confirmed',
+                'regex:/[A-Z]/', 'regex:/[a-z]/',
+                'regex:/[0-9]/', 'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
             'password_confirmation' => 'required',
+        ], [
+            'password.min'   => 'Password must be at least 8 characters.',
+            'password.regex' => 'Password must include uppercase, lowercase, number, and special character.',
         ]);
 
         $record = DB::table('password_reset_tokens')
@@ -181,7 +206,9 @@ class AuthController extends Controller
             return response()->json(['message' => 'This reset link has expired. Please request a new one.'], 422);
         }
 
-        $user = User::where('email', $request->email)->first();
+        // Prefer the client account; fall back to any account with this email
+        $user = User::where('email', $request->email)->where('role', 'client')->first()
+             ?? User::where('email', $request->email)->first();
 
         if (! $user) {
             return response()->json(['message' => 'Invalid reset link.'], 422);
@@ -218,7 +245,11 @@ class AuthController extends Controller
         $request->validate([
             'name'                  => ['required', 'string', 'min:3', 'max:255', 'regex:/^[\pL\s\-\']+$/u'],
             'phone'                 => ['nullable', 'string', 'regex:/^(\+213|0)[\d\s]{7,12}$/'],
-            'password'              => ['nullable', 'min:8', 'confirmed', 'regex:/^(?=.*[a-zA-Z])(?=.*[0-9]).+$/'],
+            'password'              => [
+                'nullable', 'string', 'min:8', 'confirmed',
+                'regex:/[A-Z]/', 'regex:/[a-z]/',
+                'regex:/[0-9]/', 'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
             'password_confirmation' => 'nullable',
         ], [
             'name.min'       => 'Name must be at least 3 characters.',

@@ -1,3 +1,59 @@
+/* ── ADMIN SIDEBAR ──────────────────────────────────────────── */
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 16px;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(255,255,255,.55);
+  font-family: inherit;
+  font-size: .875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .13s, color .13s;
+  text-align: left;
+  box-sizing: border-box;
+}
+.admin-nav-link:hover {
+  background: rgba(255,255,255,.05);
+  color: rgba(255,255,255,.88);
+}
+.admin-nav-active {
+  background: rgba(255,255,255,.1) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  box-shadow: inset 3px 0 0 #f97316;
+}
+.admin-nav-category {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.32);
+  padding: 0 16px;
+  margin-bottom: 3px;
+}
+.sidebar-badge {
+  font-size: .68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.78);
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+.sidebar-badge-urgent {
+  background: #f97316;
+  color: #fff;
+}
+
+/* ── OVERVIEW GRID ──────────────────────────────────────────── */
 .admin-overview-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

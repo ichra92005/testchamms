@@ -2,6 +2,30 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Dashboard greeting icon animations */
+@keyframes slowSpin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+@keyframes gentlePulse { 0%, 100% { opacity: 1 } 50% { opacity: .55 } }
+.greeting-sun  { animation: slowSpin 20s linear infinite; transform-origin: center; }
+.greeting-moon { animation: gentlePulse 3s ease-in-out infinite; }
+
+/* Status filter dropdown */
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Toast slide-in (shared) */
+@keyframes toastSlideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+/* Skeleton loading shimmer */
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 :root {
   --navy: #1a2e6e;
   --navy-dark: #142158;

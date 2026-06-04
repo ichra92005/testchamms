@@ -1,5 +1,8 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { CashIcon, CardIcon, SearchIcon } from '../Icons'
+import StatusFilter from '../StatusFilter'
+import { SkeletonTable } from '../Skeleton'
+import { sortByStatus, isCompleted } from '../../utils/parcelSort'
 
 const STATUS_COLORS = {
   pending:          { bg: '#fff7ed', color: '#c2410c', label: 'Pending' },
@@ -14,16 +17,19 @@ export default function ParcelTable({ parcels, loading }) {
   const [search, setSearch]       = useState('')
   const [statusFilter, setStatus] = useState('all')
 
-  const filtered = parcels.filter(p => {
-    const matchSearch = p.tracking_code?.toLowerCase().includes(search.toLowerCase()) ||
-                        p.receiver_name?.toLowerCase().includes(search.toLowerCase()) ||
-                        p.sender_name?.toLowerCase().includes(search.toLowerCase()) ||
-                        p.destination?.toLowerCase().includes(search.toLowerCase())
-    const matchStatus = statusFilter === 'all' || p.status === statusFilter
-    return matchSearch && matchStatus
-  })
+  const filtered = useMemo(() => {
+    const matched = parcels.filter(p => {
+      const matchSearch = p.tracking_code?.toLowerCase().includes(search.toLowerCase()) ||
+                          p.receiver_name?.toLowerCase().includes(search.toLowerCase()) ||
+                          p.sender_name?.toLowerCase().includes(search.toLowerCase()) ||
+                          p.destination?.toLowerCase().includes(search.toLowerCase())
+      const matchStatus = statusFilter === 'all' || p.status === statusFilter
+      return matchSearch && matchStatus
+    })
+    return sortByStatus(matched)
+  }, [parcels, search, statusFilter])
 
-  if (loading) return <div className="parcels-empty"><div className="spinner"/><p>Loading parcels...</p></div>
+  if (loading) return <SkeletonTable rows={10} cells={6}/>
 
   return (
     <div className="parcels-section">
@@ -33,15 +39,7 @@ export default function ParcelTable({ parcels, loading }) {
             <span className="field-icon"><SearchIcon size={14}/></span>
             <input className="field-input" style={{padding:'8px 0'}} type="text" placeholder="Search parcels..." value={search} onChange={e => setSearch(e.target.value)}/>
           </div>
-          <select className="role-select" value={statusFilter} onChange={e => setStatus(e.target.value)}>
-            <option value="all">All Statuses</option>
-            <option value="pending">Pending</option>
-            <option value="registered">Registered</option>
-            <option value="assigned">Assigned</option>
-            <option value="out_for_delivery">Out for Delivery</option>
-            <option value="delivered">Delivered</option>
-            <option value="failed">Failed</option>
-          </select>
+          <StatusFilter value={statusFilter} onChange={setStatus}/>
         </div>
         <span style={{fontSize:'.88rem',color:'#64748b'}}>{filtered.length} parcels</span>
       </div>
@@ -61,7 +59,7 @@ export default function ParcelTable({ parcels, loading }) {
               const s = STATUS_COLORS[p.status] || { bg:'#f1f5f9', color:'#475569', label: p.status }
               const isInter = p.origin_wilaya && p.destination_wilaya && p.origin_wilaya !== p.destination_wilaya
               return (
-                <tr key={p.id}>
+                <tr key={p.id} style={isCompleted(p.status) ? { opacity: .65, background: '#fafafa' } : undefined}>
                   <td><code className="tracking-code">{p.tracking_code}</code></td>
                   <td>
                     <div className="receiver-name">{p.sender_name || '—'}</div>

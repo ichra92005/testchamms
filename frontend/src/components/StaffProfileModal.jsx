@@ -3,6 +3,7 @@ import { getMe } from '../services/api'
 import api from '../services/api'
 import { validateName, validatePhone, validatePassword } from '../utils/validation'
 import { UserIcon, PhoneIcon, CheckIcon, XIcon, LockIcon, EyeIcon, EyeOffIcon, AlertIcon } from './Icons'
+import PasswordRequirements from './PasswordRequirements'
 
 const ROLE_LABEL = { admin: 'Admin', agency: 'Agent', agent: 'Agent', driver: 'Driver', client: 'Client' }
 
@@ -171,7 +172,8 @@ export default function StaffProfileModal({ onClose }) {
               <PwField label="New Password" value={password}
                 onChange={v => { setPassword(v); setErrors(er => ({...er, password:'', confirm:''})) }}
                 show={showPw} onToggle={() => setShowPw(s => !s)}/>
-              {errors.password && <p style={{color:'#dc2626',fontSize:'.75rem',marginTop:-8,marginBottom:10}}><AlertIcon size={13}/> {errors.password}</p>}
+              {errors.password && <p style={{color:'#dc2626',fontSize:'.75rem',marginTop:-8,marginBottom:4}}><AlertIcon size={13}/> {errors.password}</p>}
+              <PasswordRequirements password={password}/>
               <PwField label="Confirm Password" value={confirm}
                 onChange={v => { setConfirm(v); setErrors(er => ({...er, confirm:''})) }}
                 show={showCf} onToggle={() => setShowCf(s => !s)}/>

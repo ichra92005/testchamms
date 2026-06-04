@@ -31,8 +31,11 @@ export const validateEmail = (v) => {
 // For profile update: pass required=false to allow blank (keep current)
 export const validatePassword = (v, required = true) => {
   if (!v) return required ? 'Password is required' : ''
-  if (v.length < 8 || !/[a-zA-Z]/.test(v) || !/[0-9]/.test(v))
-    return 'Password must be at least 8 characters with letters and numbers'
+  if (v.length < 8)                              return 'Password must be at least 8 characters'
+  if (!/[A-Z]/.test(v))                          return 'Password must contain an uppercase letter'
+  if (!/[a-z]/.test(v))                          return 'Password must contain a lowercase letter'
+  if (!/[0-9]/.test(v))                          return 'Password must contain a number'
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(v))         return 'Password must contain a special character'
   return ''
 }
 

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { staffLogin, clientLogin, clientRegister, forgotPassword } from '../services/api'
 import { validateName, validatePhone, validateEmail, validatePassword, validateStaffId } from '../utils/validation'
 import { UserIcon, ShieldIcon, CheckIcon, ArrowLeftIcon, PhoneIcon, EyeIcon, EyeOffIcon, LockIcon, AlertIcon, TruckIcon } from '../components/Icons'
+import PasswordRequirements from '../components/PasswordRequirements'
 import '../styles/auth.css'
 
 // ── Field with inline error ───────────────────────────────────
@@ -178,7 +179,13 @@ export default function AuthPage({ onBack, defaultTab = 'client' }) {
       localStorage.setItem('client_phone', form.phone)
       window.location.reload()
     } catch (err) {
-      setGlobalError(err.response?.data?.message || 'Registration failed. Email may already be in use.')
+      const emailErr = err.response?.data?.errors?.email?.[0]
+      const msg      = err.response?.data?.message || ''
+      if (emailErr || msg.toLowerCase().includes('email')) {
+        setGlobalError('This email is already registered as a client. Try logging in instead.')
+      } else {
+        setGlobalError(msg || 'Registration failed. Please try again.')
+      }
     } finally { setLoading(false) }
   }
 
@@ -403,9 +410,9 @@ export default function AuthPage({ onBack, defaultTab = 'client' }) {
                   <Field label="Full Name" placeholder="Your full name" value={form.name} onChange={u('name')} error={fieldErrors.name}/>
                   <Field label="Phone Number" placeholder="+213 555 000 000" value={form.phone} onChange={u('phone')} error={fieldErrors.phone} icon={<PhoneIcon size={15}/>}/>
                   <Field label="Email Address" placeholder="your@email.com" value={form.email} onChange={u('email')} error={fieldErrors.email}/>
-                  <Field label="Password" type="password" placeholder="Min 8 characters" value={form.password} onChange={u('password')} error={fieldErrors.password}
-                    hint="At least 8 characters"/>
-                  <button type="submit" className="btn-primary" style={{width:'100%',justifyContent:'center',marginTop:8}} disabled={loading}>
+                  <Field label="Password" type="password" placeholder="Create a strong password" value={form.password} onChange={u('password')} error={fieldErrors.password}/>
+                  <PasswordRequirements password={form.password}/>
+                  <button type="submit" className="btn-primary" style={{width:'100%',justifyContent:'center',marginTop:14}} disabled={loading}>
                     {loading ? 'Creating account...' : 'Create Account'}
                   </button>
                 </form>

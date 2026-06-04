@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { updateStatus, refuseParcel } from '../../services/api'
 import { MapPinIcon, HomeIcon, CashIcon, CardIcon, CheckIcon, XIcon, TruckIcon, PackageIcon } from '../Icons'
+import { sortByStatus, isCompleted } from '../../utils/parcelSort'
+import { SkeletonTable } from '../Skeleton'
 import LiveLocationTracker from './LiveLocationTracker'
 
 const STATUS_COLORS = {
@@ -8,6 +10,7 @@ const STATUS_COLORS = {
   accepted:         { bg: '#f0fdf4', color: '#15803d', label: 'Accepted' },
   out_for_delivery: { bg: '#fdf4ff', color: '#7e22ce', label: 'Out for Delivery' },
   delivered:        { bg: '#f0fdf4', color: '#166534', label: 'Delivered' },
+  confirmed:        { bg: '#f0fdf4', color: '#166534', label: 'Delivered & Confirmed' },
   failed:           { bg: '#fef2f2', color: '#dc2626', label: 'Failed' },
   refused:          { bg: '#fef2f2', color: '#dc2626', label: 'Refused' },
 }
@@ -30,7 +33,7 @@ function RefuseModal({ parcel, onClose, onSuccess, toast }) {
     setLoading(true)
     try {
       await refuseParcel(parcel.id, finalReason)
-      toast?.success('Parcel refused — returned to agent for reassignment')
+      toast?.info('Assignment refused — returned to agent for reassignment')
       onSuccess()
     } catch {
       toast?.error('Failed to refuse parcel.')
@@ -88,7 +91,7 @@ function ReportIssueModal({ parcel, onClose, onSuccess, toast }) {
     setLoading(true)
     try {
       await updateStatus(parcel.id, 'failed', reason)
-      toast?.success('Delivery issue reported')
+      toast?.warning('Issue reported')
       onSuccess()
     } catch {
       toast?.error('Failed to report issue.')
@@ -142,7 +145,7 @@ function ParcelCard({ parcel, onRefresh, toast }) {
 
   return (
     <>
-      <div className="driver-card">
+      <div className="driver-card" style={isCompleted(parcel.status) ? { opacity: .65, background: '#fafafa' } : undefined}>
         <div className="driver-card-header">
           <code className="tracking-code">{parcel.tracking_code}</code>
           <span style={{background:s.bg,color:s.color,padding:'4px 12px',borderRadius:999,fontSize:'.78rem',fontWeight:700}}>{s.label}</span>
@@ -219,21 +222,21 @@ function ParcelCard({ parcel, onRefresh, toast }) {
                 <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><XIcon size={15}/> Refuse</span>
               </button>
               <button className="driver-btn" style={{background:'#f0fdf4',color:'#166534'}}
-                onClick={() => handle('accepted','Delivery accepted')} disabled={!!loading}>
+                onClick={() => handle('accepted','Assignment accepted')} disabled={!!loading}>
                 <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><CheckIcon size={15}/> {loading==='accepted'?'...':'Accept'}</span>
               </button>
             </>
           )}
           {parcel.status==='accepted' && (
             <button className="driver-btn out-for-delivery"
-              onClick={() => handle('out_for_delivery','Out for delivery — GPS started')} disabled={!!loading}>
+              onClick={() => handle('out_for_delivery','Delivery started — GPS sharing active')} disabled={!!loading}>
               <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><TruckIcon size={15}/> {loading?'...':'Start Delivery'}</span>
             </button>
           )}
           {parcel.status==='out_for_delivery' && (
             <>
               <button className="driver-btn delivered"
-                onClick={() => handle('delivered','Parcel delivered successfully')} disabled={!!loading}>
+                onClick={() => handle('delivered','Marked as delivered')} disabled={!!loading}>
                 <span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><CheckIcon size={15}/> {loading==='delivered'?'...':'Mark Delivered'}</span>
               </button>
               <button className="driver-btn failed" onClick={() => setShowIssue(true)} disabled={!!loading}>
@@ -242,6 +245,7 @@ function ParcelCard({ parcel, onRefresh, toast }) {
             </>
           )}
           {parcel.status==='delivered' && <div className="driver-done success"><span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><CheckIcon size={15}/> Successfully Delivered</span></div>}
+          {parcel.status==='confirmed' && <div className="driver-done success"><span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><CheckIcon size={15}/> Delivered &amp; Confirmed</span></div>}
           {parcel.status==='failed'    && <div className="driver-done danger"><span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><XIcon size={15}/> Delivery Failed</span></div>}
           {parcel.status==='refused'   && <div className="driver-done danger"><span style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}><XIcon size={15}/> Delivery Refused</span></div>}
         </div>
@@ -264,12 +268,15 @@ function ParcelCard({ parcel, onRefresh, toast }) {
 }
 
 export default function DriverParcelList({ parcels, loading, onRefresh, toast }) {
-  if (loading) return <div className="parcels-empty"><div className="spinner"/><p>Loading your parcels...</p></div>
-  if (parcels.length === 0) return (
+  // Active deliveries first; completed ones sink to the bottom.
+  const sorted = useMemo(() => sortByStatus(parcels), [parcels])
+
+  if (loading) return <SkeletonTable rows={6} cells={4}/>
+  if (sorted.length === 0) return (
     <div className="parcels-empty">
       <PackageIcon size={48} style={{opacity:.2,marginBottom:16}}/>
       <h3>No parcels found</h3><p>No parcels in this category</p>
     </div>
   )
-  return <div className="driver-cards-grid">{parcels.map(p => <ParcelCard key={p.id} parcel={p} onRefresh={onRefresh} toast={toast}/>)}</div>
+  return <div className="driver-cards-grid">{sorted.map(p => <ParcelCard key={p.id} parcel={p} onRefresh={onRefresh} toast={toast}/>)}</div>
 }

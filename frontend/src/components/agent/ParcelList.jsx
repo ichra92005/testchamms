@@ -1,5 +1,8 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { PackageIcon, UserIcon, CashIcon, CardIcon, CheckIcon, XIcon, PlusIcon, SearchIcon, PrinterIcon, AlertIcon } from '../Icons'
+import StatusFilter from '../StatusFilter'
+import { SkeletonTable } from '../Skeleton'
+import { sortByStatus, isCompleted } from '../../utils/parcelSort'
 import ParcelValidationModal from './ParcelValidationModal'
 import DeliverySlip from './DeliverySlip'
 
@@ -22,14 +25,22 @@ export default function ParcelList({ parcels, loading, onAssign, onRefresh, onCr
   const [validateTarget, setValidateTarget] = useState(null)
   const [slipTarget, setSlipTarget]         = useState(null)
   const [search, setSearch]                 = useState('')
+  const [statusFilter, setStatusFilter]     = useState('all')
 
-  const filtered = parcels.filter(p =>
-    p.tracking_code?.toLowerCase().includes(search.toLowerCase()) ||
-    p.receiver_name?.toLowerCase().includes(search.toLowerCase()) ||
-    p.sender_name?.toLowerCase().includes(search.toLowerCase()) ||
-    p.destination?.toLowerCase().includes(search.toLowerCase()) ||
-    p.destination_wilaya?.toLowerCase().includes(search.toLowerCase())
-  )
+  // Search + status filter, then completed parcels sink to the bottom.
+  const filtered = useMemo(() => {
+    const matched = parcels.filter(p => {
+      const matchSearch =
+        p.tracking_code?.toLowerCase().includes(search.toLowerCase()) ||
+        p.receiver_name?.toLowerCase().includes(search.toLowerCase()) ||
+        p.sender_name?.toLowerCase().includes(search.toLowerCase()) ||
+        p.destination?.toLowerCase().includes(search.toLowerCase()) ||
+        p.destination_wilaya?.toLowerCase().includes(search.toLowerCase())
+      const matchStatus = statusFilter === 'all' || p.status === statusFilter
+      return matchSearch && matchStatus
+    })
+    return sortByStatus(matched)
+  }, [parcels, search, statusFilter])
 
   const handleValidationSuccess = (result) => {
     setValidateTarget(null)
@@ -38,7 +49,7 @@ export default function ParcelList({ parcels, loading, onAssign, onRefresh, onCr
     if (result === 'rejected')  toast?.error('Parcel rejected')
   }
 
-  if (loading) return <div className="parcels-empty"><div className="spinner"/><p>Loading parcels...</p></div>
+  if (loading) return <SkeletonTable rows={8} cells={6}/>
 
   if (parcels.length === 0) return (
     <div className="parcels-empty">
@@ -60,6 +71,7 @@ export default function ParcelList({ parcels, loading, onAssign, onRefresh, onCr
               <span className="field-icon"><SearchIcon size={14}/></span>
               <input className="field-input" placeholder="Search parcels..." value={search} onChange={e => setSearch(e.target.value)} style={{padding:'8px 0'}}/>
             </div>
+            <StatusFilter value={statusFilter} onChange={setStatusFilter}/>
             <span style={{fontSize:'.85rem',color:'#94a3b8'}}>{filtered.length} result{filtered.length !== 1 ? 's' : ''}</span>
           </div>
           <button className="btn-primary" onClick={onCreateNew}>
@@ -77,7 +89,7 @@ export default function ParcelList({ parcels, loading, onAssign, onRefresh, onCr
             </thead>
             <tbody>
               {filtered.map(p => (
-                <tr key={p.id}>
+                <tr key={p.id} style={isCompleted(p.status) ? { opacity: .65, background: '#fafafa' } : undefined}>
                   <td>
                     <code className="tracking-code">{p.tracking_code}</code>
                     {p.payment_method === 'online' && (

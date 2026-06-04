@@ -1,7 +1,12 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import api from '../../services/api'
 import { validateName, validatePhone, validatePassword } from '../../utils/validation'
-import { PackageIcon, LogoutIcon, UserIcon, SearchIcon, CheckIcon, XIcon, PhoneIcon, AlertIcon, RefreshIcon } from '../../components/Icons'
+import { PackageIcon, SearchIcon, CheckIcon, XIcon, PhoneIcon, AlertIcon, RefreshIcon } from '../../components/Icons'
+import PasswordRequirements from '../../components/PasswordRequirements'
+import TopBar from '../../components/TopBar'
+import DashboardGreeting from '../../components/DashboardGreeting'
+import { SkeletonStatsRow, SkeletonTable } from '../../components/Skeleton'
+import { sortByStatus, isCompleted } from '../../utils/parcelSort'
 
 const STATUS_COLORS = {
   pending:          { bg: '#fff7ed', color: '#c2410c', label: 'Pending' },
@@ -91,6 +96,7 @@ function ProfileModal({ onClose }) {
               placeholder="Min 8 chars with letters and numbers"/>
           </div>
           {fieldErrors.password && <p style={{color:'#dc2626',fontSize:'.75rem',marginTop:4}}><AlertIcon size={13}/> {fieldErrors.password}</p>}
+          <PasswordRequirements password={password}/>
         </div>
 
         <div className="modal-actions">
@@ -137,19 +143,23 @@ export default function ClientDashboard({ onTrack }) {
     return () => clearInterval(interval)
   }, [fetchParcels])
 
-  const filtered = parcels.filter(p => {
-    const matchSearch = p.tracking_code?.toLowerCase().includes(search.toLowerCase()) ||
-                        p.receiver_name?.toLowerCase().includes(search.toLowerCase())
-    const matchFilter = filter === 'all' || p.status === filter
-    return matchSearch && matchFilter
-  })
+  // Search + filter, then completed parcels sink to the bottom.
+  const filtered = useMemo(() => {
+    const matched = parcels.filter(p => {
+      const matchSearch = p.tracking_code?.toLowerCase().includes(search.toLowerCase()) ||
+                          p.receiver_name?.toLowerCase().includes(search.toLowerCase())
+      const matchFilter = filter === 'all' || p.status === filter
+      return matchSearch && matchFilter
+    })
+    return sortByStatus(matched)
+  }, [parcels, search, filter])
 
-  const stats = {
+  const stats = useMemo(() => ({
     total:     parcels.length,
     active:    parcels.filter(p => ['registered','assigned','accepted','out_for_delivery'].includes(p.status)).length,
     delivered: parcels.filter(p => ['delivered','confirmed'].includes(p.status)).length,
     failed:    parcels.filter(p => ['failed','refused'].includes(p.status)).length,
-  }
+  }), [parcels])
 
   const FILTERS = [
     { key: 'all',              label: 'All' },
@@ -162,54 +172,47 @@ export default function ClientDashboard({ onTrack }) {
   return (
     <div style={{ minHeight:'100vh', background:'#f8fafc' }}>
       {/* Navbar */}
-      <nav style={{ background:'#1a2e6e', padding:'0 32px', height:64, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-        <div style={{ fontSize:'1.2rem', fontWeight:800, color:'#fff' }}>
-          Deliver<span style={{ color:'#f97316' }}>It</span>
-        </div>
-        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-          <button onClick={() => setShowProfile(true)}
-            style={{ background:'rgba(255,255,255,.1)', border:'1px solid rgba(255,255,255,.2)', color:'#fff', padding:'7px 14px', borderRadius:8, fontFamily:'inherit', fontWeight:600, fontSize:'.85rem', cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-            <UserIcon size={15}/> {name}
-          </button>
-          <button onClick={() => { localStorage.clear(); window.location.href = '/' }}
-            style={{ background:'rgba(255,255,255,.1)', border:'1px solid rgba(255,255,255,.2)', color:'#fff', padding:'7px 14px', borderRadius:8, fontFamily:'inherit', fontWeight:600, fontSize:'.85rem', cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-            <LogoutIcon size={14}/> Logout
-          </button>
-        </div>
-      </nav>
+      <TopBar
+        role="client"
+        onOpenProfile={() => setShowProfile(true)}
+        title={
+          <span style={{ fontSize:'1.2rem', fontWeight:800, color:'#fff' }}>
+            Deliver<span style={{ color:'#f97316' }}>It</span>
+          </span>
+        }
+      />
 
       <div style={{ maxWidth:960, margin:'0 auto', padding:'32px 24px' }}>
         {/* Welcome */}
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:28 }}>
-          <div>
-            <h1 style={{ fontSize:'1.6rem', fontWeight:800, color:'#1a2e6e', marginBottom:4 }}>My Parcels</h1>
-            <p style={{ color:'#64748b', fontSize:'.9rem' }}>Track and manage all your deliveries in one place</p>
-          </div>
-          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-            <span style={{ fontSize:'.75rem', color:'#94a3b8' }}>
-              Updated {lastRefresh.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' })}
-            </span>
-            <button onClick={fetchParcels}
-              style={{ padding:'8px 14px', borderRadius:8, border:'1.5px solid #e2e8f0', background:'#fff', fontFamily:'inherit', fontWeight:600, fontSize:'.82rem', color:'#1a2e6e', cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
-              <RefreshIcon size={14}/> Refresh
-            </button>
-          </div>
+        <DashboardGreeting role="client"/>
+        <div style={{ display:'flex', justifyContent:'flex-end', alignItems:'center', gap:12, marginTop:-12, marginBottom:20 }}>
+          <span style={{ fontSize:'.75rem', color:'#94a3b8' }}>
+            Updated {lastRefresh.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' })}
+          </span>
+          <button onClick={fetchParcels}
+            style={{ padding:'8px 14px', borderRadius:8, border:'1.5px solid #e2e8f0', background:'#fff', fontFamily:'inherit', fontWeight:600, fontSize:'.82rem', color:'#1a2e6e', cursor:'pointer', display:'flex', alignItems:'center', gap:6 }}>
+            <RefreshIcon size={14}/> Refresh
+          </button>
         </div>
 
         {/* Stats */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16, marginBottom:28 }}>
-          {[
-            { label:'Total Parcels',  value: stats.total,     color:'#1a2e6e' },
-            { label:'In Transit',     value: stats.active,    color:'#7e22ce' },
-            { label:'Delivered',      value: stats.delivered, color:'#166534' },
-            { label:'Failed',         value: stats.failed,    color:'#dc2626' },
-          ].map(s => (
-            <div key={s.label} style={{ background:'#fff', borderRadius:14, padding:'20px', boxShadow:'0 1px 4px rgba(0,0,0,.07)', borderTop:`3px solid ${s.color}` }}>
-              <div style={{ fontSize:'1.8rem', fontWeight:800, color:s.color }}>{s.value}</div>
-              <div style={{ fontSize:'.82rem', color:'#64748b', marginTop:4 }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <div style={{ marginBottom: 28 }}><SkeletonStatsRow count={4}/></div>
+        ) : (
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16, marginBottom:28 }}>
+            {[
+              { label:'Total Parcels',  value: stats.total,     color:'#1a2e6e' },
+              { label:'In Transit',     value: stats.active,    color:'#7e22ce' },
+              { label:'Delivered',      value: stats.delivered, color:'#166534' },
+              { label:'Failed',         value: stats.failed,    color:'#dc2626' },
+            ].map(s => (
+              <div key={s.label} style={{ background:'#fff', borderRadius:14, padding:'20px', boxShadow:'0 1px 4px rgba(0,0,0,.07)', borderTop:`3px solid ${s.color}` }}>
+                <div style={{ fontSize:'1.8rem', fontWeight:800, color:s.color }}>{s.value}</div>
+                <div style={{ fontSize:'.82rem', color:'#64748b', marginTop:4 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Table */}
         <div style={{ background:'#fff', borderRadius:14, boxShadow:'0 1px 4px rgba(0,0,0,.07)', overflow:'hidden' }}>
@@ -237,9 +240,8 @@ export default function ClientDashboard({ onTrack }) {
           </div>
 
           {loading ? (
-            <div style={{ padding:48, textAlign:'center', color:'#94a3b8' }}>
-              <div className="spinner" style={{ margin:'0 auto 12px' }}/>
-              <p>Loading your parcels...</p>
+            <div style={{ padding: 12 }}>
+              <SkeletonTable rows={6} cells={4}/>
             </div>
           ) : filtered.length === 0 ? (
             <div style={{ padding:48, textAlign:'center', color:'#94a3b8' }}>
@@ -253,11 +255,13 @@ export default function ClientDashboard({ onTrack }) {
             <div>
               {filtered.map((p, i) => {
                 const s = STATUS_COLORS[p.status] || { bg:'#f1f5f9', color:'#475569', label: p.status }
+                const done = isCompleted(p.status)
+                const baseBg = done ? '#fafafa' : 'transparent'
                 return (
                   <div key={p.id} onClick={() => onTrack(p.tracking_code)}
-                    style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', borderBottom: i<filtered.length-1?'1px solid #f8fafc':'none', cursor:'pointer', transition:'background .15s', gap:16 }}
+                    style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', borderBottom: i<filtered.length-1?'1px solid #f8fafc':'none', cursor:'pointer', transition:'background .15s', gap:16, background: baseBg, opacity: done ? .65 : 1 }}
                     onMouseEnter={e => e.currentTarget.style.background='#f8fafc'}
-                    onMouseLeave={e => e.currentTarget.style.background='transparent'}
+                    onMouseLeave={e => e.currentTarget.style.background=baseBg}
                   >
                     <div style={{ display:'flex', alignItems:'center', gap:14 }}>
                       <div style={{ width:40, height:40, borderRadius:10, background:'#eff3ff', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>

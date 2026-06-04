@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { resetPassword } from '../services/api'
+import { validatePassword } from '../utils/validation'
 import { LockIcon, CheckIcon, EyeIcon, EyeOffIcon, AlertIcon } from '../components/Icons'
+import PasswordRequirements from '../components/PasswordRequirements'
 
 function PasswordField({ label, value, onChange, error, placeholder }) {
   const [show, setShow] = useState(false)
@@ -38,10 +40,10 @@ export default function ResetPasswordPage({ token, email, onDone }) {
 
   const validate = () => {
     const e = {}
-    if (!password)           e.password = 'Password is required'
-    else if (password.length < 8) e.password = 'Password must be at least 8 characters'
-    if (!confirm)            e.confirm  = 'Please confirm your password'
-    else if (confirm !== password) e.confirm = 'Passwords do not match'
+    const pwErr = validatePassword(password)
+    if (pwErr)                     e.password = pwErr
+    if (!confirm)                  e.confirm  = 'Please confirm your password'
+    else if (confirm !== password) e.confirm  = 'Passwords do not match'
     return e
   }
 
@@ -152,11 +154,12 @@ export default function ResetPasswordPage({ token, email, onDone }) {
 
             <PasswordField
               label="New Password"
-              placeholder="Min 8 characters"
+              placeholder="Create a strong password"
               value={password}
               onChange={v => { setPassword(v); setErrors(e => ({...e, password:''})) }}
               error={errors.password}
             />
+            <PasswordRequirements password={password}/>
             <PasswordField
               label="Confirm Password"
               placeholder="Repeat your password"

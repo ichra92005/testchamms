@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { staffRegister } from '../../services/api'
 import { validateName, validateStaffId, validatePhone, validateEmail, validatePassword } from '../../utils/validation'
 import { ShieldIcon, BuildingIcon, TruckIcon, CheckIcon, XIcon, MapPinIcon, PhoneIcon, UserIcon, AlertIcon } from '../Icons'
+import PasswordRequirements from '../PasswordRequirements'
 import WilayaCommuneSelector from '../WilayaCommuneSelector'
 
 const ROLES = [
@@ -209,10 +210,11 @@ export default function CreateStaffModal({ onClose, onSuccess }) {
           <div className="field-group">
             <label className="field-label">Password <span style={{color:'#dc2626'}}>*</span></label>
             <div className={`field-wrap ${fieldErrors.password ? 'field-wrap-error' : ''}`}>
-              <input className="field-input" type="password" placeholder="Min 8 chars with letters and numbers"
+              <input className="field-input" type="password" placeholder="Create a strong password"
                 value={form.password} onChange={e => u('password')(e.target.value)}/>
             </div>
             <ERR msg={fieldErrors.password}/>
+            <PasswordRequirements password={form.password}/>
           </div>
 
           <div className="modal-actions">

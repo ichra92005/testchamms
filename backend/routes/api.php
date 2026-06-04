@@ -46,4 +46,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/users/{id}',      [AdminController::class, 'show']);
     Route::patch('/admin/users/{id}',    [AdminController::class, 'update']);
     Route::delete('/admin/users/{id}',   [AdminController::class, 'deleteUser']);
+
+    Route::get('/admin/sidebar-counts',  [AdminController::class, 'sidebarCounts']);
 });
